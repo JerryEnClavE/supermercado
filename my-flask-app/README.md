@@ -1,11 +1,11 @@
-# Flask Web Application
+# My Flask App
 
-This is a simple Flask web application that demonstrates the basic structure and functionality of a Flask project.
+This is a basic Flask web application structure.
 
 ## Project Structure
 
 ```
-flask-web-app
+my-flask-app
 ├── app
 │   ├── __init__.py
 │   ├── routes.py
@@ -16,7 +16,7 @@ flask-web-app
 │   │   └── index.html
 │   └── static
 │       ├── css
-│       │   └── style.css
+│       │   └── styles.css
 │       └── js
 │           └── main.js
 ├── tests
@@ -24,7 +24,6 @@ flask-web-app
 ├── requirements.txt
 ├── config.py
 ├── run.py
-├── .gitignore
 └── README.md
 ```
 
@@ -33,12 +32,25 @@ flask-web-app
 1. Clone the repository:
    ```
    git clone <repository-url>
+   cd my-flask-app
    ```
-2. Navigate to the project directory:
+
+2. Create a virtual environment:
    ```
-   cd flask-web-app
+   python -m venv venv
    ```
-3. Install the required packages:
+
+3. Activate the virtual environment:
+   - On Windows:
+     ```
+     venv\Scripts\activate
+     ```
+   - On macOS/Linux:
+     ```
+     source venv/bin/activate
+     ```
+
+4. Install the required packages:
    ```
    pip install -r requirements.txt
    ```
@@ -49,13 +61,14 @@ To run the application, execute the following command:
 ```
 python run.py
 ```
-The application will be accessible at `http://127.0.0.1:5000`.
+
+Visit `http://127.0.0.1:5000` in your web browser to see the application in action.
 
 ## Testing
 
 To run the tests, use:
 ```
-pytest tests/test_app.py
+python -m unittest discover -s tests
 ```
 
 ## License

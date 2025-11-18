@@ -1,7 +1,7 @@
 import unittest
 from app import create_app
 
-class TestApp(unittest.TestCase):
+class AppTestCase(unittest.TestCase):
     def setUp(self):
         self.app = create_app()
         self.client = self.app.test_client()
@@ -11,12 +11,10 @@ class TestApp(unittest.TestCase):
     def tearDown(self):
         self.app_context.pop()
 
-    def test_homepage(self):
+    def test_index(self):
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'Welcome', response.data)  # Adjust based on actual content in index.html
-
-    # Add more tests as needed
 
 if __name__ == '__main__':
     unittest.main()

@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - Flask Web App</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Index Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
     {% extends 'base.html' %}
 
     {% block content %}
-    <h1>Welcome to the Flask Web Application!</h1>
-    <p>This is the homepage of your Flask web app.</p>
+    <h1>Welcome to My Flask App</h1>
+    <p>This is the main page of the application.</p>
     {% endblock %}
     
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>

@@ -6,9 +6,7 @@ def create_app():
     # Load configuration
     app.config.from_object('config.Config')
 
-    # Initialize extensions here (e.g., database, login manager)
-
-    # Import and register blueprints
+    # Register blueprints
     from .routes import main as main_blueprint
     app.register_blueprint(main_blueprint)
 
