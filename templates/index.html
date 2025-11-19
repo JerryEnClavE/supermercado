@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 text-center mb-4">
+        <h1>Mi Revista Digital</h1>
+        <p class="lead">Bienvenido a nuestra revista online</p>
+    </div>
+</div>
+
+<div class="row">
+    {% for articulo in articulos %}
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100">
+            <img src="{{ articulo.imagen }}" class="card-img-top" alt="{{ articulo.titulo }}" style="height: 200px; object-fit: cover;">
+            <div class="card-body">
+                <h5 class="card-title">{{ articulo.titulo }}</h5>
+                <p class="card-text">{{ articulo.contenido[:100] }}...</p>
+                <small class="text-muted">Por {{ articulo.autor }} - {{ articulo.fecha }}</small>
+            </div>
+            <div class="card-footer">
+                <a href="{{ url_for('ver_articulo', articulo_id=articulo.id) }}" class="btn btn-primary">Leer más</a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12 text-center">
+        <p>No hay artículos todavía. <a href="{{ url_for('admin') }}">¡Crea el primero!</a></p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
