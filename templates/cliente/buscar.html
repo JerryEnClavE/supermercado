@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Buscar Productos - SuperMarket{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-5">
+        <div class="col-md-8 mx-auto">
+            <form action="{{ url_for('buscar') }}" method="GET">
+                <div class="input-group input-group-lg">
+                    <input type="text" name="q" class="form-control" 
+                           placeholder="Buscar productos por nombre o descripción..." 
+                           value="{{ query }}" aria-label="Buscar productos">
+                    <button class="btn btn-success" type="submit">
+                        <i class="fas fa-search"></i> Buscar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>
+                    {% if query %}
+                    Resultados para "{{ query }}"
+                    {% else %}
+                    Buscar Productos
+                    {% endif %}
+                </h2>
+                <span class="badge bg-success fs-6">{{ productos|length }} productos encontrados</span>
+            </div>
+
+            {% if productos %}
+            <div class="row g-4">
+                {% for producto in productos %}
+                <div class="col-xl-3 col-lg-4 col-md-6">
+                    <div class="card product-card shadow-sm h-100">
+                        {% if producto.es_especial %}
+                        <span class="especial-badge badge bg-danger">
+                            <i class="fas fa-bolt me-1"></i>Oferta
+                        </span>
+                        {% endif %}
+                        
+                        <img src="https://via.placeholder.com/300x200/28a745/ffffff?text=Producto" 
+                             class="card-img-top" alt="{{ producto.nombre }}" style="height: 200px; object-fit: cover;">
+                        
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">{{ producto.nombre }}</h5>
+                            <p class="card-text text-muted small flex-grow-1">{{ producto.descripcion or 'Producto de calidad' }}</p>
+                            
+                            <div class="mt-auto">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    {% if producto.es_especial and producto.precio_especial %}
+                                    <div>
+                                        <span class="price-old text-muted">${{ "%.2f"|format(producto.precio) }}</span>
+                                        <span class="price-special ms-2">${{ "%.2f"|format(producto.precio_especial) }}</span>
+                                    </div>
+                                    {% else %}
+                                    <span class="h5 text-success mb-0">${{ "%.2f"|format(producto.precio) }}</span>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">
+                                        <i class="fas fa-box me-1"></i>{{ producto.stock }} en stock
+                                    </small>
+                                    <span class="badge bg-secondary">{{ producto.categoria }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% elif query %}
+            <div class="text-center py-5">
+                <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                <h4 class="text-muted">No se encontraron productos</h4>
+                <p class="text-muted">No hay resultados para "{{ query }}"</p>
+                <div class="mt-3">
+                    <a href="{{ url_for('ver_productos') }}" class="btn btn-success me-2">Ver Todos los Productos</a>
+                    <a href="{{ url_for('buscar') }}" class="btn btn-outline-success">Nueva Búsqueda</a>
+                </div>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                <h4 class="text-muted">Busca productos</h4>
+                <p class="text-muted">Ingresa el nombre o descripción del producto que estás buscando</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
