@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2>Editor de Artículos</h2>
+        
+        <!-- Formulario para nuevo artículo -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Crear Nuevo Artículo</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Título</label>
+                                <input type="text" class="form-control" name="titulo" required>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label class="form-label">Autor</label>
+                                <input type="text" class="form-control" name="autor" required>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label class="form-label">Fecha</label>
+                                <input type="date" class="form-control" name="fecha" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Categoría</label>
+                        <input type="text" class="form-control" name="categoria" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">URL de Imagen</label>
+                        <input type="text" class="form-control" name="imagen" placeholder="https://...">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Contenido</label>
+                        <textarea class="form-control" name="contenido" rows="10" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success">Publicar Artículo</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Lista de artículos existentes -->
+        <h4>Artículos Existentes</h4>
+        {% for articulo in articulos %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h5>{{ articulo.titulo }}</h5>
+                        <p class="mb-1"><strong>Autor:</strong> {{ articulo.autor }}</p>
+                        <p class="mb-1"><strong>Fecha:</strong> {{ articulo.fecha }}</p>
+                        <p class="mb-0"><strong>Categoría:</strong> {{ articulo.categoria }}</p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <a href="{{ url_for('editar_articulo', articulo_id=articulo.id) }}" class="btn btn-warning btn-sm">Editar</a>
+                        <a href="{{ url_for('eliminar_articulo', articulo_id=articulo.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar este artículo?')">Eliminar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <p class="text-muted">No hay artículos todavía.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
