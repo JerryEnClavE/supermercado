@@ -3,45 +3,18 @@
 {% block content %}
 <div class="row">
     <div class="col-12">
-        <h2>Editar Artículo</h2>
-        
+        <h2>Editar Producto</h2>
         <form method="POST">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label class="form-label">Título</label>
-                        <input type="text" class="form-control" name="titulo" value="{{ articulo.titulo }}" required>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="mb-3">
-                        <label class="form-label">Autor</label>
-                        <input type="text" class="form-control" name="autor" value="{{ articulo.autor }}" required>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="mb-3">
-                        <label class="form-label">Fecha</label>
-                        <input type="date" class="form-control" name="fecha" value="{{ articulo.fecha }}" required>
-                    </div>
-                </div>
-            </div>
-            
             <div class="mb-3">
-                <label class="form-label">Categoría</label>
-                <input type="text" class="form-control" name="categoria" value="{{ articulo.categoria }}" required>
+                <label class="form-label">Nombre</label>
+                <input type="text" class="form-control" name="nombre" value="{{ articulo.nombre }}" required>
             </div>
-            
+
             <div class="mb-3">
-                <label class="form-label">URL de Imagen</label>
-                <input type="text" class="form-control" name="imagen" value="{{ articulo.imagen }}">
+                <label class="form-label">Precio</label>
+                <input type="number" class="form-control" name="precio" value="{{ articulo.precio }}" step="0.01" required>
             </div>
-            
-            <div class="mb-3">
-                <label class="form-label">Contenido</label>
-                <textarea class="form-control" name="contenido" rows="10" required>{{ articulo.contenido }}</textarea>
-            </div>
-            
+
             <button type="submit" class="btn btn-primary">Guardar Cambios</button>
             <a href="{{ url_for('admin') }}" class="btn btn-secondary">Cancelar</a>
         </form>

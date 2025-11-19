@@ -4,7 +4,7 @@
 <div class="row">
     <div class="col-12 text-center mb-4">
         <h1>Mi Supermercado</h1>
-        <p class="lead">Bienvenido a nuestro supermercado online</p>
+        <p class="lead">Bienvenido a nuestro Supermercado online</p>
         <a href="{{ url_for('admin') }}" class="btn btn-success">
             <i class="fas fa-edit"></i> Ir al Editor
         </a>
@@ -27,6 +27,12 @@
                 </div>
             </div>
         </div>
+        <!-- mostrar nombre/precio -->
+        <h5>{{ articulo.nombre }}</h5>
+        <p>{{ articulo.precio }}</p>
+        {% if articulo.autor == usuario_actual %}
+          <a href="{{ url_for('editar_articulo', articulo_id=articulo.id) }}">Editar</a>
+        {% endif %}
     </div>
     {% else %}
     <div class="col-12 text-center">

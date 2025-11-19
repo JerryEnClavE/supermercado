@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 import json
 import os
 
@@ -7,6 +7,22 @@ app.secret_key = 'clave_secreta_simple'  # Necesaria para sesiones
 
 # Archivo donde guardaremos los artículos
 ARTICLES_FILE = 'articulos.json'
+
+@app.context_processor
+def inject_user():
+    return {'usuario_actual': session.get('usuario')}
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        session['usuario'] = request.form.get('usuario')
+        return redirect(url_for('admin'))
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('usuario', None)
+    return redirect(url_for('index'))
 
 def cargar_articulos():
     """Cargar artículos desde el archivo JSON"""
@@ -43,25 +59,18 @@ def ver_articulo(articulo_id):
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
-    """Página de administración para crear/editar artículos"""
+    """Página de administración para crear/editar artículos (productos)"""
     if request.method == 'POST':
-        # Agregar nuevo artículo
         articulos = cargar_articulos()
-        
         nuevo_articulo = {
             'id': len(articulos) + 1,
-            'titulo': request.form['titulo'],
-            'contenido': request.form['contenido'],
-            'autor': request.form['autor'],
-            'fecha': request.form['fecha'],
-            'categoria': request.form['categoria'],
-            'imagen': request.form.get('imagen', '/static/images/default.jpg')
+            'nombre': request.form['nombre'],
+            'precio': float(request.form.get('precio', 0)),
+            'autor': session.get('usuario', request.form.get('autor', 'Administrador'))
         }
-        
         articulos.append(nuevo_articulo)
         guardar_articulos(articulos)
         return redirect(url_for('admin'))
-    
     articulos = cargar_articulos()
     return render_template('admin.html', articulos=articulos)
 
@@ -69,6 +78,11 @@ def admin():
 def eliminar_articulo(articulo_id):
     """Eliminar un artículo"""
     articulos = cargar_articulos()
+    articulo = next((a for a in articulos if a['id'] == articulo_id), None)
+    if not articulo:
+        return "Artículo no encontrado", 404
+    if articulo.get('autor') != session.get('usuario'):
+        return "No autorizado", 403
     articulos = [a for a in articulos if a['id'] != articulo_id]
     guardar_articulos(articulos)
     return redirect(url_for('admin'))
@@ -78,22 +92,15 @@ def editar_articulo(articulo_id):
     """Editar un artículo existente"""
     articulos = cargar_articulos()
     articulo = next((a for a in articulos if a['id'] == articulo_id), None)
-    
     if not articulo:
         return "Artículo no encontrado", 404
-    
+    if articulo.get('autor') != session.get('usuario'):
+        return "No autorizado", 403
     if request.method == 'POST':
-        # Actualizar artículo
-        articulo['titulo'] = request.form['titulo']
-        articulo['contenido'] = request.form['contenido']
-        articulo['autor'] = request.form['autor']
-        articulo['fecha'] = request.form['fecha']
-        articulo['categoria'] = request.form['categoria']
-        articulo['imagen'] = request.form.get('imagen', '/static/images/default.jpg')
-        
+        articulo['nombre'] = request.form['nombre']
+        articulo['precio'] = float(request.form.get('precio', 0))
         guardar_articulos(articulos)
         return redirect(url_for('admin'))
-    
     return render_template('editar.html', articulo=articulo)
 
 # Crear algunos datos de ejemplo si no existen
