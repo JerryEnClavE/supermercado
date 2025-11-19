@@ -4,13 +4,34 @@
 <article>
     <div class="row">
         <div class="col-12">
-            <img src="{{ articulo.imagen }}" class="img-fluid rounded mb-4" alt="{{ articulo.titulo }}">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Inicio</a></li>
+                    <li class="breadcrumb-item active">{{ articulo.titulo }}</li>
+                </ol>
+            </nav>
+            
+            <img src="{{ articulo.imagen }}" class="img-fluid rounded mb-4" alt="{{ articulo.titulo }}" style="max-height: 400px; width: 100%; object-fit: cover;">
+            
             <h1>{{ articulo.titulo }}</h1>
-            <p class="text-muted">Por {{ articulo.autor }} | {{ articulo.fecha }} | {{ articulo.categoria }}</p>
-            <div class="content">
+            <p class="text-muted">
+                <i class="fas fa-user"></i> Por {{ articulo.autor }} | 
+                <i class="fas fa-calendar"></i> {{ articulo.fecha }} | 
+                <i class="fas fa-tag"></i> {{ articulo.categoria }}
+            </p>
+            
+            <div class="content" style="line-height: 1.8; font-size: 1.1em;">
                 {{ articulo.contenido|replace('\n', '<br>')|safe }}
             </div>
-            <a href="{{ url_for('index') }}" class="btn btn-secondary mt-4">← Volver al inicio</a>
+            
+            <div class="mt-4">
+                <a href="{{ url_for('index') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Volver al inicio
+                </a>
+                <a href="{{ url_for('admin') }}" class="btn btn-outline-primary">
+                    <i class="fas fa-edit"></i> Ir al Editor
+                </a>
+            </div>
         </div>
     </div>
 </article>

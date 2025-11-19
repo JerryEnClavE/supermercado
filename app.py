@@ -1,31 +1,40 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for
 import json
 import os
 
 app = Flask(__name__)
+app.secret_key = 'clave_secreta_simple'  # Necesaria para sesiones
 
 # Archivo donde guardaremos los artículos
-ARTICLES_FILE = 'data/articulos.json'
+ARTICLES_FILE = 'articulos.json'
 
 def cargar_articulos():
-    if os.path.exists(ARTICLES_FILE):
-        with open(ARTICLES_FILE, 'r', encoding='utf-8') as f:
-            return json.load(f)
+    """Cargar artículos desde el archivo JSON"""
+    try:
+        if os.path.exists(ARTICLES_FILE):
+            with open(ARTICLES_FILE, 'r', encoding='utf-8') as f:
+                return json.load(f)
+    except Exception as e:
+        print(f"Error cargando artículos: {e}")
     return []
 
 def guardar_articulos(articulos):
-    # Crear directorio si no existe
-    os.makedirs('data', exist_ok=True)
-    with open(ARTICLES_FILE, 'w', encoding='utf-8') as f:
-        json.dump(articulos, f, ensure_ascii=False, indent=2)
+    """Guardar artículos en el archivo JSON"""
+    try:
+        with open(ARTICLES_FILE, 'w', encoding='utf-8') as f:
+            json.dump(articulos, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        print(f"Error guardando artículos: {e}")
 
 @app.route('/')
 def index():
+    """Página principal con todos los artículos"""
     articulos = cargar_articulos()
     return render_template('index.html', articulos=articulos)
 
 @app.route('/articulo/<int:articulo_id>')
 def ver_articulo(articulo_id):
+    """Página individual de un artículo"""
     articulos = cargar_articulos()
     articulo = next((a for a in articulos if a['id'] == articulo_id), None)
     if articulo:
@@ -34,6 +43,7 @@ def ver_articulo(articulo_id):
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
+    """Página de administración para crear/editar artículos"""
     if request.method == 'POST':
         # Agregar nuevo artículo
         articulos = cargar_articulos()
@@ -45,7 +55,7 @@ def admin():
             'autor': request.form['autor'],
             'fecha': request.form['fecha'],
             'categoria': request.form['categoria'],
-            'imagen': request.form['imagen'] or '/static/images/default.jpg'
+            'imagen': request.form.get('imagen', '/static/images/default.jpg')
         }
         
         articulos.append(nuevo_articulo)
@@ -57,6 +67,7 @@ def admin():
 
 @app.route('/eliminar/<int:articulo_id>')
 def eliminar_articulo(articulo_id):
+    """Eliminar un artículo"""
     articulos = cargar_articulos()
     articulos = [a for a in articulos if a['id'] != articulo_id]
     guardar_articulos(articulos)
@@ -64,6 +75,7 @@ def eliminar_articulo(articulo_id):
 
 @app.route('/editar/<int:articulo_id>', methods=['GET', 'POST'])
 def editar_articulo(articulo_id):
+    """Editar un artículo existente"""
     articulos = cargar_articulos()
     articulo = next((a for a in articulos if a['id'] == articulo_id), None)
     
@@ -77,12 +89,39 @@ def editar_articulo(articulo_id):
         articulo['autor'] = request.form['autor']
         articulo['fecha'] = request.form['fecha']
         articulo['categoria'] = request.form['categoria']
-        articulo['imagen'] = request.form['imagen']
+        articulo['imagen'] = request.form.get('imagen', '/static/images/default.jpg')
         
         guardar_articulos(articulos)
         return redirect(url_for('admin'))
     
     return render_template('editar.html', articulo=articulo)
 
+# Crear algunos datos de ejemplo si no existen
+def crear_datos_ejemplo():
+    articulos = cargar_articulos()
+    if not articulos:
+        articulos_ejemplo = [
+            {
+                'id': 1,
+                'titulo': 'Bienvenido a Mi Revista',
+                'contenido': 'Esta es una revista simple creada con Flask. Puedes editar, crear y eliminar artículos fácilmente.',
+                'autor': 'Administrador',
+                'fecha': '2024-01-01',
+                'categoria': 'General',
+                'imagen': 'https://via.placeholder.com/400x200?text=Imagen+Ejemplo'
+            },
+            {
+                'id': 2,
+                'titulo': 'Cómo Usar Esta Revista',
+                'contenido': 'Ve a la página de Editor para crear nuevos artículos. Puedes editar o eliminar los existentes fácilmente.',
+                'autor': 'Administrador',
+                'fecha': '2024-01-01',
+                'categoria': 'Tutorial',
+                'imagen': 'https://via.placeholder.com/400x200?text=Tutorial'
+            }
+        ]
+        guardar_articulos(articulos_ejemplo)
+
 if __name__ == '__main__':
+    crear_datos_ejemplo()
     app.run(debug=True)

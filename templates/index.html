@@ -3,29 +3,38 @@
 {% block content %}
 <div class="row">
     <div class="col-12 text-center mb-4">
-        <h1>Supermercado</h1>
-        <p class="lead">Bienvenido a nuestro Supermercado online</p>
+        <h1>Mi Revista Digital</h1>
+        <p class="lead">Bienvenido a nuestra revista online</p>
+        <a href="{{ url_for('admin') }}" class="btn btn-success">
+            <i class="fas fa-edit"></i> Ir al Editor
+        </a>
     </div>
 </div>
 
 <div class="row">
     {% for articulo in articulos %}
     <div class="col-md-6 col-lg-4 mb-4">
-        <div class="card h-100">
+        <div class="card articulo-card h-100">
             <img src="{{ articulo.imagen }}" class="card-img-top" alt="{{ articulo.titulo }}" style="height: 200px; object-fit: cover;">
-            <div class="card-body">
+            <div class="card-body d-flex flex-column">
                 <h5 class="card-title">{{ articulo.titulo }}</h5>
-                <p class="card-text">{{ articulo.contenido[:100] }}...</p>
-                <small class="text-muted">Por {{ articulo.autor }} - {{ articulo.fecha }}</small>
-            </div>
-            <div class="card-footer">
-                <a href="{{ url_for('ver_articulo', articulo_id=articulo.id) }}" class="btn btn-primary">Leer más</a>
+                <p class="card-text flex-grow-1">{{ articulo.contenido[:100] }}...</p>
+                <div class="mt-auto">
+                    <small class="text-muted">Por {{ articulo.autor }} - {{ articulo.fecha }}</small>
+                    <a href="{{ url_for('ver_articulo', articulo_id=articulo.id) }}" class="btn btn-primary btn-sm mt-2 w-100">
+                        Leer más
+                    </a>
+                </div>
             </div>
         </div>
     </div>
     {% else %}
     <div class="col-12 text-center">
-        <p>No hay artículos todavía. <a href="{{ url_for('admin') }}">¡Crea el primero!</a></p>
+        <div class="alert alert-info">
+            <h4>No hay artículos todavía</h4>
+            <p>¡Ve al editor para crear el primer artículo!</p>
+            <a href="{{ url_for('admin') }}" class="btn btn-success">Crear Primer Artículo</a>
+        </div>
     </div>
     {% endfor %}
 </div>
