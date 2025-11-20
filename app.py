@@ -130,5 +130,4 @@ def crear_datos_ejemplo():
         guardar_articulos(articulos_ejemplo)
 
 if __name__ == '__main__':
-    crear_datos_ejemplo()
     app.run(debug=True)
